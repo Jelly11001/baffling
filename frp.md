@@ -28,3 +28,25 @@ custom_domains = repo.iwi.com   #所绑定的公网服务器域名，一级、�
 --------------------- 
 ```
 ## 开机自启
+新建`vim /etc/systemd/system/frps.service`文件，并写入以下内容
+```
+[Unit]
+Description=frps daemon
+After=syslog.target  network.target
+Wants=network.target
+
+[Service]
+Type=simple
+ExecStart=/home/pi/Developer/frp_0.14.0_linux_arm/frpc -c /home/pi/Developer/frp_0.14.0_linux_arm/frpc.ini
+Restart= always
+RestartSec=1min
+ExecStop=/usr/bin/killall frpc
+
+[Install]
+WantedBy=multi-user.target
+```
+启动并设为开机自启。
+```
+$ sudo systemctl start frps
+$ sudo systemctl enable frps
+```
